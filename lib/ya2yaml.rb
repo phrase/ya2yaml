@@ -61,7 +61,14 @@ class Ya2YAML
           end
           hash_keys.collect {|k|
             key = emit(k, level + 1)
-            indent + key + ': ' + emit(obj[k], level + 1)
+            if (
+              is_one_plain_line?(key) ||
+              key =~ /\A(#{REX_BOOL}|#{REX_FLOAT}|#{REX_INT}|#{REX_NULL})\z/x
+            )
+              indent + key + ': ' + emit(obj[k], level + 1)
+            else
+              raise "Invalid key name"
+            end
           }.join('')
         end
       when NilClass
@@ -220,11 +227,9 @@ class Ya2YAML
 
   def is_one_plain_line?(str)
     # YAML 1.1 / 4.6.11.
-    str !~ /^([\-\?:,\[\]\{\}\#&\*!\|>'"%@`\s]|---|\.\.\.)/    &&
-    str !~ /[:\#\s\[\]\{\},]/                                  &&
-    str !~ /#{REX_ANY_LB}/                                     &&
-    str !~ /^(#{REX_BOOL}|#{REX_FLOAT}|#{REX_INT}|#{REX_MERGE}
-      |#{REX_NULL}|#{REX_TIMESTAMP}|#{REX_VALUE})$/x
+    str !~ /^([\-\?:,\[\]\{\}\#&\*!\|>'"%@`]|---|\.\.\.)/      &&
+    str !~ /[:\#\[\]\{\},]/                                    &&
+    str !~ /#{REX_ANY_LB}/
   end
 
   def s_indent(level)
