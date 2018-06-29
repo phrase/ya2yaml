@@ -6,7 +6,6 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = nil if s.respond_to? :required_rubygems_version=
   s.authors = ["Akira FUNAI"]
-  s.cert_chain = nil
   s.date = %q{2017-06-13}
   s.email = %q{akira@funai.com}
   s.extra_rdoc_files = ["README.rdoc"]
